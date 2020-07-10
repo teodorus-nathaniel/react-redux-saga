@@ -4,7 +4,14 @@ import './App.css';
 import { connect } from 'react-redux';
 import { fetchApi } from './redux/fetch/fetch-actions';
 
-function App ({ isFetching, error, fetchProduct, product }){
+function App ({ 
+  product,
+  isFetchingProduct,
+  errorProduct,
+  book,
+  isFetchingBook,
+  errorBook
+}){
   useEffect(
     () => {
       fetchProduct();
@@ -19,10 +26,15 @@ function App ({ isFetching, error, fetchProduct, product }){
         <p>
           Edit <code>src/App.js</code> and save to reload.
         </p>
-        {isFetching ? (
-          'LOADING...'
+        {isFetchingProduct ? (
+          'LOADING PRODUCT...'
         ) : (
           product.map((data) => <span key={data}>{data}</span>)
+        )}
+        {isFetchingBook ? (
+          'LOADING BOOK...'
+        ) : (
+          <h1>book</h1>
         )}
         <a
           className="App-link"
@@ -37,13 +49,17 @@ function App ({ isFetching, error, fetchProduct, product }){
 }
 
 const mapStateToProps = (state) => ({
-  isFetching: state.fetchReducer.isFetching.FETCH_PRODUCT,
-  error: state.fetchReducer.errors.FETCH_PRODUCT,
-  product: state.productReducer.product
+  product: state.productReducer.product,
+  isFetchingProduct: state.fetchReducer.isFetching.FETCH_PRODUCT,
+  errorProduct: state.fetchReducer.errors.FETCH_PRODUCT,
+  book: state.bookReducer.book,
+  isFetchingBook: state.fetchReducer.isFetching.FETCH_BOOK,
+  errorBook: state.fetchReducer.errors.FETCH_BOOK,
 });
 
 const mapDispatchToProps = (dispatch) => ({
-  fetchProduct: () => dispatch(fetchApi({ name: 'FETCH_PRODUCT' }))
+  fetchProduct: () => dispatch(fetchApi({ name: 'FETCH_PRODUCT' })),
+  fetchBook: (id) => dispatch(fetchApi({ name: 'FETCH_BOOK', data: { id } }))
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(App);
